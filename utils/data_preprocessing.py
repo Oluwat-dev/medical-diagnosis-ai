@@ -1,11 +1,10 @@
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageFilter
 import streamlit as st
 from typing import Tuple, Optional
-import cv2
 
 class MedicalImagePreprocessor:
-    """Handles preprocessing of medical images for AI analysis"""
+    """Handles preprocessing of medical images for AI analysis without OpenCV dependency"""
     
     def __init__(self):
         self.target_sizes = {
@@ -58,42 +57,55 @@ class MedicalImagePreprocessor:
             return None
     
     def preprocess_chest_xray(self, img_array: np.ndarray) -> np.ndarray:
-        """Specific preprocessing for chest X-ray images"""
+        """Specific preprocessing for chest X-ray images using PIL only"""
+        
+        # Convert to PIL Image for processing
+        img_pil = Image.fromarray((img_array * 255).astype(np.uint8))
         
         # Convert to grayscale and back to RGB for consistency
-        gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
+        gray = img_pil.convert('L')
         
-        # Apply CLAHE (Contrast Limited Adaptive Histogram Equalization)
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-        enhanced = clahe.apply((gray * 255).astype(np.uint8))
+        # Enhance contrast (alternative to CLAHE)
+        enhancer = ImageEnhance.Contrast(gray)
+        enhanced = enhancer.enhance(2.0)  # Increase contrast
         
         # Convert back to RGB
-        enhanced_rgb = cv2.cvtColor(enhanced, cv2.COLOR_GRAY2RGB)
-        enhanced_rgb = enhanced_rgb.astype(np.float32) / 255.0
+        enhanced_rgb = enhanced.convert('RGB')
+        enhanced_array = np.array(enhanced_rgb).astype(np.float32) / 255.0
         
         # ImageNet normalization (since we use pre-trained models)
         mean = np.array([0.485, 0.456, 0.406])
         std = np.array([0.229, 0.224, 0.225])
         
-        normalized = (enhanced_rgb - mean) / std
+        normalized = (enhanced_array - mean) / std
         
         return normalized
     
     def preprocess_skin_lesion(self, img_array: np.ndarray) -> np.ndarray:
-        """Specific preprocessing for skin lesion images"""
+        """Specific preprocessing for skin lesion images using PIL only"""
         
-        # Apply Gaussian blur to reduce noise
-        blurred = cv2.GaussianBlur(img_array, (3, 3), 0)
+        # Convert to PIL Image for processing
+        img_pil = Image.fromarray((img_array * 255).astype(np.uint8))
+        
+        # Apply slight blur to reduce noise
+        blurred = img_pil.filter(ImageFilter.GaussianBlur(radius=0.5))
         
         # Enhance contrast
-        enhanced = cv2.convertScaleAbs(blurred, alpha=1.2, beta=10)
-        enhanced = enhanced.astype(np.float32) / 255.0
+        enhancer = ImageEnhance.Contrast(blurred)
+        enhanced = enhancer.enhance(1.2)
+        
+        # Enhance brightness slightly
+        brightness_enhancer = ImageEnhance.Brightness(enhanced)
+        enhanced = brightness_enhancer.enhance(1.1)
+        
+        # Convert back to array
+        enhanced_array = np.array(enhanced).astype(np.float32) / 255.0
         
         # ImageNet normalization
         mean = np.array([0.485, 0.456, 0.406])
         std = np.array([0.229, 0.224, 0.225])
         
-        normalized = (enhanced - mean) / std
+        normalized = (enhanced_array - mean) / std
         
         return normalized
     

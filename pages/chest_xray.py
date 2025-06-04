@@ -2,8 +2,8 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from models.medical_models import ModelManager
-from utils.data_preprocessing_streamlit import MedicalImagePreprocessor
-from utils.visualization_streamlit import MedicalVisualization
+from utils.data_preprocessing import MedicalImagePreprocessor
+from utils.visualization import MedicalVisualization
 import io
 
 def show_chest_xray_page():

@@ -1,6 +1,6 @@
 import streamlit as st
 from models.medical_models import MedicalSymptomAnalyzer
-from utils.visualization_streamlit import MedicalVisualization
+from utils.visualization import MedicalVisualization
 import pandas as pd
 from datetime import datetime, timedelta
 

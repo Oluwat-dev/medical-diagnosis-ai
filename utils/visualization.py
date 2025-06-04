@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 class MedicalVisualization:
-    """Creates visualizations for medical diagnosis results"""
+    """Creates visualizations for medical diagnosis results - Streamlit Cloud compatible"""
     
     def __init__(self):
         # Set style for matplotlib
@@ -221,7 +221,7 @@ class MedicalVisualization:
             st.error(f"Low confidence prediction ({confidence:.1%}) - Results may be unreliable")
     
     def plot_image_preprocessing_comparison(self, original_image, processed_image):
-        """Show before/after image preprocessing"""
+        """Show before/after image preprocessing using matplotlib"""
         
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
         
