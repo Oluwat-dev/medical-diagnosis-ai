@@ -121,14 +121,23 @@ def main():
     if page == "Home":
         show_home_page()
     elif page == "Chest X-Ray Analysis":
-        from chest_xray_module import show_chest_xray_page
-        show_chest_xray_page()
+        try:
+            from modules_chest_xray import show_chest_xray_page
+            show_chest_xray_page()
+        except ImportError:
+            st.error("Chest X-Ray module is temporarily unavailable.")
     elif page == "Skin Lesion Detection":
-        from skin_lesion_module import show_skin_lesion_page
-        show_skin_lesion_page()
+        try:
+            from modules_skin_lesion import show_skin_lesion_page
+            show_skin_lesion_page()
+        except ImportError:
+            st.error("Skin Lesion module is temporarily unavailable.")
     elif page == "Symptom Checker":
-        from symptom_checker_module import show_symptom_checker_page
-        show_symptom_checker_page()
+        try:
+            from modules_symptom_checker import show_symptom_checker_page
+            show_symptom_checker_page()
+        except ImportError:
+            st.error("Symptom Checker module is temporarily unavailable.")
 
 
 def show_home_page():
