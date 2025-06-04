@@ -53,7 +53,8 @@ def show_skin_lesion_page():
     uploaded_file = st.file_uploader(
         "Choose a skin lesion image",
         type=['png', 'jpg', 'jpeg'],
-        help="Upload a clear, well-lit image of the skin lesion"
+        help="Upload a clear, well-lit image of the skin lesion",
+        key="skin_lesion_uploader"
     )
     
     if uploaded_file is not None:
@@ -97,25 +98,26 @@ def show_skin_lesion_page():
             col1, col2 = st.columns(2)
             
             with col1:
-                show_preprocessing = st.checkbox("Show preprocessing steps", value=False)
+                show_preprocessing = st.checkbox("Show preprocessing steps", value=False, key="skin_preprocessing")
                 confidence_threshold = st.slider(
                     "Confidence threshold for alerts",
                     min_value=0.5,
                     max_value=0.95,
                     value=0.75,
                     step=0.05,
-                    help="Threshold for high-confidence predictions"
+                    help="Threshold for high-confidence predictions",
+                    key="skin_confidence"
                 )
             
             with col2:
-                risk_assessment = st.checkbox("Include risk assessment", value=True)
-                detailed_analysis = st.checkbox("Show detailed feature analysis", value=False)
+                risk_assessment = st.checkbox("Include risk assessment", value=True, key="skin_risk")
+                detailed_analysis = st.checkbox("Show detailed feature analysis", value=False, key="skin_detailed")
             
             # Patient information (optional)
             with st.expander("👤 Patient Information (Optional)"):
                 col1, col2 = st.columns(2)
                 with col1:
-                    patient_age = st.number_input("Age", min_value=0, max_value=120, value=30)
+                    patient_age = st.number_input("Age", min_value=0, max_value=120, value=30, key="patient_age")
                     skin_type = st.selectbox("Skin Type", [
                         "Type I (Very Fair)",
                         "Type II (Fair)", 
@@ -126,13 +128,13 @@ def show_skin_lesion_page():
                     ], key="skin_type")
                 
                 with col2:
-                    family_history = st.checkbox("Family history of skin cancer")
+                    family_history = st.checkbox("Family history of skin cancer", key="family_history")
                     sun_exposure = st.selectbox("Sun exposure level", [
                         "Low", "Moderate", "High", "Very High"
                     ], key="sun_exposure")
             
             # Run analysis button
-            if st.button("🔍 Analyze Lesion", type="primary", use_container_width=True):
+            if st.button("🔍 Analyze Lesion", type="primary", use_container_width=True, key="skin_analyze"):
                 
                 with st.spinner("Preprocessing image..."):
                     # Preprocess the image

@@ -38,7 +38,8 @@ def main():
     st.sidebar.title("Navigation")
     page = st.sidebar.selectbox(
         "Choose Analysis Type",
-        ["Home", "Chest X-Ray Analysis", "Skin Lesion Detection", "Symptom Checker"]
+        ["Home", "Chest X-Ray Analysis", "Skin Lesion Detection", "Symptom Checker"],
+        key="main_navigation"
     )
     
     if page == "Home":

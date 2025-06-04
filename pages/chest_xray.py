@@ -36,7 +36,8 @@ def show_chest_xray_page():
     uploaded_file = st.file_uploader(
         "Choose a chest X-ray image",
         type=['png', 'jpg', 'jpeg'],
-        help="Upload a clear chest X-ray image in PNG or JPEG format"
+        help="Upload a clear chest X-ray image in PNG or JPEG format",
+        key="chest_xray_uploader"
     )
     
     if uploaded_file is not None:
@@ -76,22 +77,23 @@ def show_chest_xray_page():
             col1, col2 = st.columns(2)
             
             with col1:
-                show_preprocessing = st.checkbox("Show preprocessing steps", value=False)
+                show_preprocessing = st.checkbox("Show preprocessing steps", value=False, key="chest_xray_preprocessing")
                 confidence_threshold = st.slider(
                     "Confidence threshold for alerts",
                     min_value=0.5,
                     max_value=0.95,
                     value=0.8,
                     step=0.05,
-                    help="Threshold for high-confidence predictions"
+                    help="Threshold for high-confidence predictions",
+                    key="chest_xray_confidence"
                 )
             
             with col2:
-                show_model_info = st.checkbox("Show model information", value=False)
-                show_performance = st.checkbox("Show model performance metrics", value=False)
+                show_model_info = st.checkbox("Show model information", value=False, key="chest_xray_model_info")
+                show_performance = st.checkbox("Show model performance metrics", value=False, key="chest_xray_performance")
             
             # Run analysis button
-            if st.button("🔍 Analyze X-Ray", type="primary", use_container_width=True):
+            if st.button("🔍 Analyze X-Ray", type="primary", use_container_width=True, key="chest_xray_analyze"):
                 
                 with st.spinner("Preprocessing image..."):
                     # Preprocess the image

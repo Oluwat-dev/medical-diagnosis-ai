@@ -114,7 +114,7 @@ def show_quick_symptom_check(symptom_analyzer: MedicalSymptomAnalyzer, visualize
         )
     
     # Analyze symptoms
-    if st.button("🔍 Analyze Symptoms", type="primary", use_container_width=True):
+    if st.button("🔍 Analyze Symptoms", type="primary", use_container_width=True, key="quick_analyze"):
         if selected_symptoms:
             with st.spinner("Analyzing symptoms..."):
                 analysis_result = symptom_analyzer.analyze_symptoms(selected_symptoms)
@@ -137,13 +137,13 @@ def show_detailed_assessment(symptom_analyzer: MedicalSymptomAnalyzer, visualize
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        age = st.number_input("Age", min_value=0, max_value=120, value=30)
+        age = st.number_input("Age", min_value=0, max_value=120, value=30, key="detailed_age")
     
     with col2:
         gender = st.selectbox("Gender", ["Male", "Female", "Other", "Prefer not to say"], key="detailed_gender")
     
     with col3:
-        weight = st.number_input("Weight (kg)", min_value=20, max_value=200, value=70)
+        weight = st.number_input("Weight (kg)", min_value=20, max_value=200, value=70, key="detailed_weight")
     
     # Current symptoms with details
     st.write("**Current Symptoms:**")
@@ -151,7 +151,8 @@ def show_detailed_assessment(symptom_analyzer: MedicalSymptomAnalyzer, visualize
     # Primary complaint
     primary_complaint = st.text_area(
         "Describe your main concern:",
-        placeholder="E.g., I have been experiencing chest pain for 2 days..."
+        placeholder="E.g., I have been experiencing chest pain for 2 days...",
+        key="detailed_complaint"
     )
     
     # Symptom checklist with severity
@@ -189,25 +190,28 @@ def show_detailed_assessment(symptom_analyzer: MedicalSymptomAnalyzer, visualize
         chronic_conditions = st.multiselect(
             "Chronic conditions",
             ["Diabetes", "Hypertension", "Heart Disease", "Asthma", "COPD", 
-             "Arthritis", "Depression", "Anxiety", "Other"]
+             "Arthritis", "Depression", "Anxiety", "Other"],
+            key="detailed_conditions"
         )
         
         current_medications = st.text_area(
             "Current medications",
-            placeholder="List current medications..."
+            placeholder="List current medications...",
+            key="detailed_medications"
         )
     
     with col2:
         allergies = st.text_area(
             "Known allergies",
-            placeholder="Food, drug, environmental allergies..."
+            placeholder="Food, drug, environmental allergies...",
+            key="detailed_allergies"
         )
         
-        recent_travel = st.checkbox("Recent travel (within 2 weeks)")
-        recent_exposure = st.checkbox("Known exposure to illness")
+        recent_travel = st.checkbox("Recent travel (within 2 weeks)", key="detailed_travel")
+        recent_exposure = st.checkbox("Known exposure to illness", key="detailed_exposure")
     
     # Analyze detailed symptoms
-    if st.button("🔍 Perform Detailed Analysis", type="primary", use_container_width=True):
+    if st.button("🔍 Perform Detailed Analysis", type="primary", use_container_width=True, key="detailed_analyze"):
         if selected_detailed_symptoms:
             with st.spinner("Performing comprehensive analysis..."):
                 analysis_result = symptom_analyzer.analyze_symptoms(selected_detailed_symptoms)
@@ -238,20 +242,21 @@ def show_symptom_history():
     col1, col2 = st.columns(2)
     
     with col1:
-        log_date = st.date_input("Date", datetime.now())
-        log_time = st.time_input("Time", datetime.now().time())
+        log_date = st.date_input("Date", datetime.now(), key="history_date")
+        log_time = st.time_input("Time", datetime.now().time(), key="history_time")
     
     with col2:
         log_symptoms = st.multiselect(
             "Symptoms experienced",
             ["fever", "headache", "cough", "fatigue", "nausea", "stomach_pain", 
-             "dizziness", "chest_pain", "shortness_of_breath", "rash"]
+             "dizziness", "chest_pain", "shortness_of_breath", "rash"],
+            key="history_symptoms"
         )
     
     log_severity = st.selectbox("Overall severity", ["Mild", "Moderate", "Severe"], key="log_severity")
-    log_notes = st.text_area("Additional notes", placeholder="Any additional observations...")
+    log_notes = st.text_area("Additional notes", placeholder="Any additional observations...", key="history_notes")
     
-    if st.button("📝 Log Symptoms", use_container_width=True):
+    if st.button("📝 Log Symptoms", use_container_width=True, key="log_symptoms_btn"):
         if log_symptoms:
             entry = {
                 'date': log_date,
