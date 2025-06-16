@@ -35,8 +35,8 @@ An advanced medical diagnosis system using TensorFlow neural networks with an in
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd medical-diagnosis-system
+git clone https://github.com/Oluwat-dev/medical-diagnosis-ai.git
+cd medical-diagnosis-ai
 ```
 
 2. Install dependencies:
@@ -164,4 +164,4 @@ For questions or issues, please create an issue in the GitHub repository.
 
 ---
 
-**Note**: This AI system demonstrates medical diagnosis capabilities but should never replace professional medical consultation.
+**Note**: This AI system demonstrates medical diagnosis capabilities but should never replace professional medical consultation. Thank you.
