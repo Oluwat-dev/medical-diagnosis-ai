@@ -5,6 +5,8 @@ from models.medical_models import ModelManager
 from utils.data_preprocessing import MedicalImagePreprocessor
 from utils.visualization import MedicalVisualization
 import io
+import json
+from datetime import datetime
 
 def show_chest_xray_page():
     """Display the chest X-ray analysis page"""
@@ -146,6 +148,10 @@ def show_chest_xray_page():
                 # Recommendations
                 st.subheader("💡 Recommendations")
                 provide_chest_xray_recommendations(prediction_result)
+                
+                # Download results functionality
+                st.subheader("📥 Download Results")
+                generate_chest_xray_report(prediction_result, uploaded_file.name, image)
             
             # Model information section
             if show_model_info:
@@ -385,3 +391,29 @@ def show_chest_xray_instructions():
         6. **Documentation**: Record AI assistance and final interpretation
         7. **Follow-up**: Plan appropriate next steps based on findings
         """)
+
+def generate_chest_xray_report(prediction_result, filename, image):
+    """Generate downloadable report for chest X-ray analysis"""
+    
+    # Create report data
+    report_data = {
+        "analysis_type": "Chest X-Ray Analysis",
+        "timestamp": datetime.now().isoformat(),
+        "filename": filename,
+        "predictions": prediction_result.get('predictions', {}),
+        "confidence": prediction_result.get('confidence', 0),
+        "primary_diagnosis": prediction_result.get('predicted_class', 'Unknown'),
+        "medical_disclaimer": "This analysis is for educational purposes only. Consult healthcare professionals for medical decisions."
+    }
+    
+    # Convert to JSON
+    report_json = json.dumps(report_data, indent=2)
+    
+    # Create download button
+    st.download_button(
+        label="📄 Download Analysis Report (JSON)",
+        data=report_json,
+        file_name=f"chest_xray_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+        mime="application/json",
+        help="Download detailed analysis results in JSON format"
+    )

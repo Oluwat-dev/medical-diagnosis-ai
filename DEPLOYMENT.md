@@ -1,169 +1,142 @@
 # Deployment Guide
 
-## GitHub Deployment
+## GitHub Repository Setup
 
-### Prerequisites
-- GitHub account
-- Git installed locally
-- Python 3.11+ environment
+### 1. Create GitHub Repository
 
-### Steps to Deploy
+1. Create a new repository on GitHub
+2. Clone to your local machine:
+```bash
+git clone https://github.com/yourusername/medical-ai-diagnosis.git
+cd medical-ai-diagnosis
+```
 
-1. **Create a new repository on GitHub**
-   - Go to github.com and create a new repository
-   - Name it: `medical-diagnosis-ai`
-   - Make it public or private as preferred
-   - Don't initialize with README (we already have one)
+### 2. Upload Project Files
 
-2. **Push code to GitHub**
-   ```bash
-   git add .
-   git commit -m "Initial commit: AI Medical Diagnosis System"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/medical-diagnosis-ai.git
-   git push -u origin main
-   ```
+Copy all project files to your repository:
+- `app.py` - Main application
+- `modules_chest_xray.py` - Chest X-ray module
+- `modules_skin_lesion.py` - Skin lesion module  
+- `modules_symptom_checker.py` - Symptom checker module
+- `models/medical_models.py` - AI models
+- `utils/data_preprocessing.py` - Image preprocessing
+- `utils/visualization.py` - Visualization functions
+- `.streamlit/config.toml` - Streamlit configuration
+- `requirements.txt` - Python dependencies
+- `packages.txt` - System dependencies
+- `README.md` - Documentation
 
-3. **Set up for collaboration**
-   - Add collaborators in repository settings
-   - Set up branch protection rules
-   - Configure issue templates
+### 3. Commit and Push
+
+```bash
+git add .
+git commit -m "Initial commit: AI Medical Diagnosis System"
+git push origin main
+```
 
 ## Streamlit Cloud Deployment
 
-### Option 1: Streamlit Community Cloud (Recommended)
+### 1. Deploy to Streamlit Cloud
 
-1. **Connect to GitHub**
-   - Go to share.streamlit.io
-   - Sign in with GitHub
-   - Click "New app"
+1. Go to [share.streamlit.io](https://share.streamlit.io)
+2. Click "New app"
+3. Connect your GitHub repository
+4. Configure deployment:
+   - **Repository**: your-username/medical-ai-diagnosis
+   - **Branch**: main
+   - **Main file path**: app.py
+5. Click "Deploy"
 
-2. **Configure deployment**
-   - Repository: `YOUR_USERNAME/medical-diagnosis-ai`
-   - Branch: `main`
-   - Main file path: `app.py`
+### 2. Configuration Files
 
-3. **Advanced settings**
-   - Python version: 3.11
-   - Requirements file: `requirements-github.txt`
+The deployment includes:
+- `requirements.txt` - Python package dependencies
+- `packages.txt` - System-level dependencies (if needed)
+- `.streamlit/config.toml` - Streamlit server configuration
 
-4. **Deploy**
-   - Click "Deploy!"
-   - Wait for build to complete
-   - App will be available at: `https://YOUR_APP_NAME.streamlit.app`
+### 3. Environment Variables
 
-### Option 2: Local Deployment
+No external API keys are required for basic functionality. The system uses:
+- TensorFlow for AI models
+- PIL for image processing
+- Streamlit for web interface
 
-1. **Clone repository**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/medical-diagnosis-ai.git
-   cd medical-diagnosis-ai
-   ```
+## Local Development
 
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements-github.txt
-   ```
-
-3. **Run application**
-   ```bash
-   streamlit run app.py --server.port 5000
-   ```
-
-## Docker Deployment (Optional)
-
-### Create Dockerfile
-```dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-
-COPY requirements-github.txt .
-RUN pip install -r requirements-github.txt
-
-COPY . .
-
-EXPOSE 8501
-
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
-
-ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
-```
-
-### Build and run
-```bash
-docker build -t medical-diagnosis-ai .
-docker run -p 8501:8501 medical-diagnosis-ai
-```
-
-## Environment Variables
-
-For production deployment, consider these environment variables:
+### Setup
 
 ```bash
-STREAMLIT_SERVER_PORT=5000
-STREAMLIT_SERVER_ADDRESS=0.0.0.0
-STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+# Clone repository
+git clone https://github.com/yourusername/medical-ai-diagnosis.git
+cd medical-ai-diagnosis
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run application
+streamlit run app.py --server.port 5000
 ```
 
-## Security Considerations
+### Development Server
 
-1. **Medical Data Privacy**
-   - Never store uploaded medical images
-   - Implement user session isolation
-   - Add SSL/TLS for production
+The application will be available at:
+- Local: http://localhost:5000
+- Network: http://0.0.0.0:5000
 
-2. **Model Security**
-   - Validate all inputs
-   - Implement rate limiting
-   - Monitor for adversarial inputs
+## File Structure
 
-3. **Compliance**
-   - Ensure HIPAA compliance if handling real patient data
-   - Add appropriate disclaimers
-   - Implement audit logging
-
-## Monitoring and Maintenance
-
-1. **Application Monitoring**
-   - Set up health checks
-   - Monitor resource usage
-   - Track error rates
-
-2. **Model Performance**
-   - Monitor prediction accuracy
-   - Track model drift
-   - Update models regularly
-
-3. **User Analytics**
-   - Track usage patterns
-   - Monitor user feedback
-   - Analyze feature adoption
+```
+medical-ai-diagnosis/
+├── app.py                      # Main Streamlit application
+├── modules_chest_xray.py       # Chest X-ray analysis
+├── modules_skin_lesion.py      # Skin lesion detection
+├── modules_symptom_checker.py  # Symptom checker
+├── models/
+│   └── medical_models.py       # AI model definitions
+├── utils/
+│   ├── data_preprocessing.py   # Image preprocessing
+│   └── visualization.py       # Visualization functions
+├── .streamlit/
+│   └── config.toml            # Streamlit configuration
+├── requirements.txt           # Python dependencies
+├── packages.txt              # System dependencies
+├── README.md                 # Project documentation
+└── DEPLOYMENT.md             # This deployment guide
+```
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **TensorFlow Installation**
-   ```bash
-   # If TensorFlow fails to install
-   pip install tensorflow-cpu
-   ```
+1. **Module Import Errors**
+   - Ensure all files are in correct directories
+   - Check Python path and imports
 
-2. **Memory Issues**
-   ```bash
-   # Increase memory limits
-   export STREAMLIT_SERVER_MAX_UPLOAD_SIZE=200
-   ```
+2. **Package Installation Issues**
+   - Verify requirements.txt contains all dependencies
+   - Use compatible package versions
 
-3. **Port Conflicts**
-   ```bash
-   # Use different port
-   streamlit run app.py --server.port 8502
-   ```
+3. **Streamlit Configuration**
+   - Check .streamlit/config.toml settings
+   - Ensure port configuration is correct
 
-### Support
+### Performance Optimization
 
-- Check GitHub Issues for common problems
-- Review Streamlit documentation
-- Contact repository maintainers
+- Use caching for model loading
+- Optimize image preprocessing
+- Configure appropriate server settings
+
+## Security Considerations
+
+- No sensitive data is stored in the application
+- All processing happens locally or on Streamlit Cloud
+- Medical disclaimers are prominently displayed
+- Educational use only warnings are included
+
+## Support
+
+For deployment issues:
+1. Check Streamlit Cloud logs
+2. Verify all files are committed to repository
+3. Review configuration files
+4. Check GitHub repository permissions
