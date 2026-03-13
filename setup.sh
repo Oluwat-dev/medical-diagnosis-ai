@@ -44,6 +44,14 @@ if [ "$OS" = "Darwin" ] && [ "$ARCH" = "arm64" ]; then
         "opencv-python>=4.8.0"
 else
     echo ""
+    if [ "$OS" = "Linux" ]; then
+        echo "Installing system libraries for OpenCV..."
+        if command -v apt-get &>/dev/null; then
+            sudo apt-get install -y libgl1 libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1 2>/dev/null || \
+            sudo apt-get install -y libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1 2>/dev/null || \
+            echo "Note: Could not install system libraries automatically. If opencv fails, run: sudo apt-get install libgl1"
+        fi
+    fi
     echo "Installing all dependencies..."
     pip install -r requirements-github.txt
 fi
